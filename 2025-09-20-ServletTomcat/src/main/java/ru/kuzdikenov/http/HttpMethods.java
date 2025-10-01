@@ -1,4 +1,4 @@
-package ru.kpfu.itis.http;
+package ru.kuzdikenov.http;
 
 public enum HttpMethods {
     GET ("GET"),

@@ -2,8 +2,8 @@ package http;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.kpfu.itis.http.HttpClient;
-import ru.kpfu.itis.http.HttpClientImpl;
+import ru.kuzdikenov.http.HttpClient;
+import ru.kuzdikenov.http.HttpClientImpl;
 
 import java.util.HashMap;
 import java.util.Map;

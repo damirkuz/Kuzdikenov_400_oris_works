@@ -1,4 +1,4 @@
-package ru.kpfu.itis.http;
+package ru.kuzdikenov.http;
 
 import java.io.IOException;
 import java.io.OutputStream;

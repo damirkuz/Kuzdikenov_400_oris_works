@@ -1,4 +1,4 @@
-package ru.kpfu.itis.http;
+package ru.kuzdikenov.http;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -2,7 +2,7 @@ package http;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.kpfu.itis.http.ConnectionOperations;
+import ru.kuzdikenov.http.ConnectionOperations;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,8 +1,8 @@
-package ru.kpfu.itis.http;
+package ru.kuzdikenov.http;
 
 import java.util.Map;
 
-import static ru.kpfu.itis.http.ConnectionOperations.makeConnectionAndGetResult;
+import static ru.kuzdikenov.http.ConnectionOperations.makeConnectionAndGetResult;
 
 
 public class HttpClientImpl implements HttpClient{
