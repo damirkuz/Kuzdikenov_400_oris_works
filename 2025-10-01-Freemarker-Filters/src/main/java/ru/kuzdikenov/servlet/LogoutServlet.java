@@ -22,7 +22,7 @@ public class LogoutServlet extends HttpServlet {
         clear(req, resp);
     }
 
-    private void clear(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void clear(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         HttpSession session = req.getSession();
         if (session != null) {
             session.invalidate();
@@ -35,7 +35,6 @@ public class LogoutServlet extends HttpServlet {
                 resp.addCookie(c);
             }
         }
-
-        resp.sendRedirect("index.html");
+        req.getRequestDispatcher("index.ftl").forward(req, resp);
     }
 }

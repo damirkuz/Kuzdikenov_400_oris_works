@@ -14,7 +14,7 @@ public class SignUpServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.sendRedirect("signUp.html");
+        resp.sendRedirect("signUp.ftl");
     }
 
     @Override

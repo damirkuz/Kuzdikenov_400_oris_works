@@ -1,5 +1,8 @@
 package ru.kuzdikenov.servlet;
 
+import freemarker.template.Template;
+
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -7,17 +10,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet(name = "Login", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.sendRedirect("login.html");
+        resp.sendRedirect("login.ftl");
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
 
@@ -36,11 +41,35 @@ public class LoginServlet extends HttpServlet {
 
             resp.addCookie(cookie);
 
-            resp.sendRedirect("main.jsp");
+            sendInfoAboutUserSession(req, resp);
+
         } else {
             resp.sendRedirect("/login");
         }
 
+    }
+
+    private void sendInfoAboutUserSession(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession httpSession = req.getSession();
+        Cookie[] cookies = req.getCookies();
+        String cookieUser = "";
+        String sessionId = "";
+
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if ("user".equalsIgnoreCase(c.getName())) {
+                    cookieUser = c.getValue();
+                } else if ("jsessionid".equalsIgnoreCase(c.getName())) {
+                    sessionId = c.getValue();
+                }
+            }
+        } else {
+            sessionId = httpSession.getId();
+        }
+        req.setAttribute("sessionUser", (String) httpSession.getAttribute("user"));
+        req.setAttribute("cookieUser", cookieUser);
+        req.setAttribute("sessionId", sessionId);
+        req.getRequestDispatcher("main.ftl").forward(req, resp);
     }
 
 }
