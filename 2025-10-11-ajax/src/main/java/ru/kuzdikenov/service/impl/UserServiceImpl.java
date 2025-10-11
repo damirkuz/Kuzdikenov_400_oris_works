@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean loginCheck(String login, String password){
+    public boolean loginPassCheck(String login, String password){
         User user;
         try {
             user = userDao.getByLogin(login);
@@ -43,6 +43,20 @@ public class UserServiceImpl implements UserService {
 
         return isUserPassword(user, password);
     }
+
+    @Override
+    public boolean loginExistsCheck(String login) {
+        User user;
+        try {
+            user = userDao.getByLogin(login);
+        } catch (UserNotFoundInDatabase e) {
+            // user isn't found -> login or pass is wrong
+            return false;
+        }
+
+        return true;
+    }
+
 
     private boolean isUserPassword(User user, String password) {
         return user.getPassword().equals(PasswordUtil.encrypt(password));

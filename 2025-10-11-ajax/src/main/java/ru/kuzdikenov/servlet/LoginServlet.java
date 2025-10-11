@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
 
-        if (userService.loginCheck(login, password)) {
+        if (userService.loginPassCheck(login, password)) {
             // logic to authenticate user
 
             // session

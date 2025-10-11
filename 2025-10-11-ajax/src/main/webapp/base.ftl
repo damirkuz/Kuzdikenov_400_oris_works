@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title><@title></@title></title>
+
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
 </head>
 
 <body>
@@ -16,6 +21,9 @@
         <@content></@content>
     </div>
 </div>
+
+<div class="flex-box" id="ajax-response"></div>
+<div class="flex-box" id="ajax-response2"></div>
 </body>
 
 </html>
