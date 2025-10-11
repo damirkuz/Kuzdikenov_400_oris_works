@@ -18,6 +18,10 @@
         <a href="/signUp">Зарегистрироваться</a>
     </p>
 
+    <#if error?has_content>
+        ${error}
+    </#if>
+
 </#macro>
 
 

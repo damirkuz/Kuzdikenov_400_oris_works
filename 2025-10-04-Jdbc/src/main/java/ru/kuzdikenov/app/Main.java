@@ -1,4 +1,4 @@
-package ru.kuzdikenov;
+package ru.kuzdikenov.app;
 
 import ru.kuzdikenov.dao.UserDao;
 import ru.kuzdikenov.dao.impl.UserDaoImpl;

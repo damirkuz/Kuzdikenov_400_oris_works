@@ -2,7 +2,10 @@ package ru.kuzdikenov.dao.impl;
 
 import ru.kuzdikenov.dao.UserDao;
 import ru.kuzdikenov.entity.User;
+import ru.kuzdikenov.exceptions.UserAlreadyExistsInDatabase;
+import ru.kuzdikenov.exceptions.UserNotFoundInDatabase;
 import ru.kuzdikenov.util.DatabaseConnectionUtil;
+import ru.kuzdikenov.util.PasswordUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,15 +23,8 @@ public class UserDaoImpl implements UserDao {
             ResultSet resultSet = statement.executeQuery(sql);
             if (resultSet != null) {
                 while (resultSet.next()) {
-                    users.add(
-                            new User(
-                                    resultSet.getInt("id"),
-                                    resultSet.getString("name"),
-                                    resultSet.getString("lastname"),
-                                    resultSet.getString("login"),
-                                    resultSet.getString("password")
-                            )
-                    );
+                    User user = getUserFromResultSet(resultSet);
+                    users.add(user);
 
                 }
             }
@@ -41,25 +37,48 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void save(User user) {
+    public void save(User user) throws UserAlreadyExistsInDatabase {
         String sql = "insert into users (name, lastname, login, password) values (?, ?, ?, ?)";
 
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getLastname());
             preparedStatement.setString(3, user.getLogin());
-            preparedStatement.setString(4, user.getPassword());
+            String encryptedPassword = PasswordUtil.encrypt(user.getPassword());
+            preparedStatement.setString(4, encryptedPassword);
 
             preparedStatement.execute();
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new UserAlreadyExistsInDatabase();
         }
     }
 
     @Override
-    public User getById(Integer id) {
-        return null;
+    public User getByLogin(String login) throws UserNotFoundInDatabase{
+        String sql = "SELECT * from users where login = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, login);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // one answer because login unique
+            resultSet.next();
+            User user = getUserFromResultSet(resultSet);
+            return user;
+        } catch (SQLException e) {
+            throw new UserNotFoundInDatabase();
+        }
     }
+
+    private User getUserFromResultSet(ResultSet resultSet) throws SQLException {
+        User user = new User(
+                resultSet.getInt("id"),
+                resultSet.getString("name"),
+                resultSet.getString("lastname"),
+                resultSet.getString("login"),
+                resultSet.getString("password")
+        );
+        return user;
+    }
+
 }
