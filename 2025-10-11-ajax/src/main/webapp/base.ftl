@@ -11,10 +11,6 @@
 </head>
 
 <body>
-<div id="header">
-    <h3>Header 12345</h3>
-    <a href="/logout">Выйти</a>
-</div>
 
 <div id="content">
     <div class="content">
@@ -22,8 +18,6 @@
     </div>
 </div>
 
-<div class="flex-box" id="ajax-response"></div>
-<div class="flex-box" id="ajax-response2"></div>
 </body>
 
 </html>

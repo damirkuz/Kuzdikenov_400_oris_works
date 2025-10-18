@@ -32,6 +32,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void signUp(String name, String lastname, String login, String password, String profilePicturePath) throws UserAlreadyExistsInDatabase {
+        User user = new User(name, lastname, login, password, profilePicturePath);
+        userDao.save(user);
+    }
+
+    @Override
     public boolean loginPassCheck(String login, String password){
         User user;
         try {
@@ -55,6 +61,11 @@ public class UserServiceImpl implements UserService {
         }
 
         return true;
+    }
+
+    @Override
+    public User getByLogin(String login) throws UserNotFoundInDatabase {
+        return userDao.getByLogin(login);
     }
 
 

@@ -5,7 +5,7 @@
 
 <#macro content>
 
-    <form method="post" id="signup-form" action="/signUp">
+    <form method="post" id="signup-form" action="/signUp" enctype="multipart/form-data">
         New Login:
         <input type="text" name="login" id="signup-form-login" placeholder="type your new login here">
         Password:
@@ -15,8 +15,10 @@
         Last name:
         <input type="text" name="lastname" placeholder="type your lastname here">
         <br>
+        <P>Upload file</p>
+        <input type="file" name="file">
+        <br>
         <input type="submit" id="signup-form-submit" value="login">
-    </form>
 
 
     <script>

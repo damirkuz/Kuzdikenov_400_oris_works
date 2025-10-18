@@ -38,7 +38,13 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void save(User user) throws UserAlreadyExistsInDatabase {
-        String sql = "insert into users (name, lastname, login, password) values (?, ?, ?, ?)";
+        String sql;
+        if (user.getProfilePicturePath() == null) {
+            sql = "insert into users (name, lastname, login, password) values (?, ?, ?, ?)";
+        } else {
+            sql = "insert into users (name, lastname, login, password, profile_picture_path) values (?, ?, ?, ?, ?)";
+
+        }
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, user.getName());
@@ -46,6 +52,10 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(3, user.getLogin());
             String encryptedPassword = PasswordUtil.encrypt(user.getPassword());
             preparedStatement.setString(4, encryptedPassword);
+
+            if (user.getProfilePicturePath() != null) {
+                preparedStatement.setString(5, user.getProfilePicturePath());
+            }
 
             preparedStatement.execute();
 
@@ -78,6 +88,10 @@ public class UserDaoImpl implements UserDao {
                 resultSet.getString("login"),
                 resultSet.getString("password")
         );
+        String path = resultSet.getString("profile_picture_path");
+        if (path != null) {
+            user.setProfilePicturePath(path);
+        }
         return user;
     }
 

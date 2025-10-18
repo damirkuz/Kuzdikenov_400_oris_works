@@ -6,6 +6,7 @@ public class User {
     private String lastname;
     private String login;
     private String password;
+    private String profilePicturePath;
 
     public User() {}
 
@@ -22,6 +23,14 @@ public class User {
         this.lastname = lastname;
         this.login = login;
         this.password = password;
+    }
+
+    public User(String name, String lastname, String login, String password, String profilePicturePath) {
+        this.name = name;
+        this.lastname = lastname;
+        this.login = login;
+        this.password = password;
+        this.profilePicturePath = profilePicturePath;
     }
 
     public Integer getId() {
@@ -42,5 +51,13 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getProfilePicturePath() {
+        return profilePicturePath;
+    }
+
+    public void setProfilePicturePath(String profilePicturePath) {
+        this.profilePicturePath = profilePicturePath;
     }
 }

@@ -9,6 +9,11 @@
         Hello, ${sessionUser}! Login successful<br>
         Session ID = ${sessionId}<br>
         Cookie user = ${cookieUser}
+
+        <#if profilePictureUrl??>
+            <img src="${profilePictureUrl}" alt="Аватарка" />
+        </#if>
+
     </h3>
 
 </#macro>

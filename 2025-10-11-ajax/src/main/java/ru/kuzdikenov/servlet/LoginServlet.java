@@ -1,6 +1,8 @@
 package ru.kuzdikenov.servlet;
 
 
+import ru.kuzdikenov.entity.User;
+import ru.kuzdikenov.exceptions.UserNotFoundInDatabase;
 import ru.kuzdikenov.service.UserService;
 
 import javax.servlet.ServletException;
@@ -42,6 +44,15 @@ public class LoginServlet extends HttpServlet {
             cookie.setMaxAge(24 * 60 * 60);
 
             resp.addCookie(cookie);
+
+            try {
+                User user = userService.getByLogin(login);
+                req.setAttribute("profilePictureUrl", user.getProfilePicturePath());
+            } catch (UserNotFoundInDatabase e) {
+                throw new RuntimeException(e);
+            }
+
+
 
             sendInfoAboutUserSession(req, resp);
         } else {
