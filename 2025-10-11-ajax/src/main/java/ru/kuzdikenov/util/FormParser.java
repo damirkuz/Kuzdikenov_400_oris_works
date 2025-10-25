@@ -1,5 +1,7 @@
 package ru.kuzdikenov.util;
 
+import com.cloudinary.Cloudinary;
+
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.annotation.MultipartConfig;
@@ -8,6 +10,7 @@ import javax.servlet.http.Part;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 @MultipartConfig
 public class FormParser {
@@ -15,6 +18,8 @@ public class FormParser {
     public static final String FILE_PREFIX = "/Users/damirkuzdikenov/IdeaProjects/University/2 course/ORIS/Works/2025-10-11-ajax/src/main/webapp/savedImages";
 
     public static final int DIRECTORIES_COUNT = 100;
+
+    private static final Cloudinary cloudinary = CloudinaryUtil.getInstance();
 
     public static String getStringParameter(HttpServletRequest req, String parameterName) throws ServletException, IOException {
         Part part = req.getPart(parameterName);
@@ -51,7 +56,10 @@ public class FormParser {
         content.read(buffer);
         outputStream.write(buffer);
         outputStream.close();
-        return shortenPath(path);
+        //        return shortenPath(path);
+        String res = cloudinary.uploader().upload(file, new HashMap<>()).get("url").toString();
+        file.delete();
+        return res;
     }
 
     private static String shortenPath(String originalPath) {
