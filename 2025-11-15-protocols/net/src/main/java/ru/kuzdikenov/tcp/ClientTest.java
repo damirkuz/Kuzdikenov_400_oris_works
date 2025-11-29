@@ -9,6 +9,8 @@ public class ClientTest {
         System.out.println(client.send("Hello"));
         System.out.println(client.send("HellO"));
         System.out.println(client.send("1234"));
+        System.out.println(client.send("Bye"));
+        System.out.println(client.send("1234"));
 
         client.stop();
     }

@@ -24,8 +24,11 @@ public class GreetingServer {
             while ((message = in.readLine()) != null) {
                 if ("hello".equalsIgnoreCase(message.trim())) {
                     out.println("hello from server");
+                } else if ("bye".equalsIgnoreCase(message.trim())) {
+                    out.println("Bye");
+                    stop();
                 } else {
-                    out.println("...");
+                    out.println("?");
                 }
             }
 
@@ -38,5 +41,16 @@ public class GreetingServer {
         GreetingServer server = new GreetingServer();
 
         server.start(5555);
+    }
+
+    public void stop() {
+        try {
+            in.close();
+            out.close();
+            clientSocket.close();
+            serverSocket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
