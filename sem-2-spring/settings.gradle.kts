@@ -1,0 +1,1 @@
+rootProject.name = "sem-2-spring"
