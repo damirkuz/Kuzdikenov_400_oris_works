@@ -9,12 +9,17 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[] {CoreConfig.class, PersistenceConfig.class};
+        return new Class[]{CoreConfig.class, PersistenceConfig.class};
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[] {WebConfig.class};
+        return new Class[]{WebConfig.class};
+    }
+
+    @Override
+    protected String[] getServletMappings() {
+        return new String[]{"/"};
     }
 
     @Override
@@ -22,11 +27,6 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("UTF-8");
         characterEncodingFilter.setForceEncoding(true);
-        return new Filter[] {characterEncodingFilter};
-    }
-
-    @Override
-    protected String[] getServletMappings() {
-        return new String[]{"/"};
+        return new Filter[]{characterEncodingFilter};
     }
 }

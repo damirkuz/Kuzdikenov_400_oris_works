@@ -13,19 +13,15 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 
 // данный класс направляет ответ с контроллеров на фримаркер
-@Configuration
 @EnableWebMvc
+@Configuration
 @ComponentScan("ru.kuzdikenov.controller")
-public class WebConfig extends WebMvcConfigurationSupport{
+public class WebConfig extends WebMvcConfigurationSupport {
 
     @Override
-    protected void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+    protected void configureDefaultServletHandling(
+            DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
-    }
-
-    @Bean
-    public StandardServletMultipartResolver multipartResolver() {
-        return new StandardServletMultipartResolver();
     }
 
     @Bean
@@ -45,4 +41,8 @@ public class WebConfig extends WebMvcConfigurationSupport{
         return configurer;
     }
 
+    @Bean
+    public StandardServletMultipartResolver  multipartResolver() {
+        return new StandardServletMultipartResolver();
+    }
 }
