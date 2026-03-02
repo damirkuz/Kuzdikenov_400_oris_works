@@ -1,11 +1,8 @@
 package ru.kuzdikenov.repository;
 
-import ru.kuzdikenov.model.User;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import ru.kuzdikenov.model.User;
 
 import java.util.List;
 
@@ -18,14 +15,11 @@ public class UserRepository {
         this.sessionFactory = sessionFactory;
     }
 
-    @Transactional(readOnly = true)
     public List<User> findAll() {
-        Session session;
-        try {
-            session = sessionFactory.getCurrentSession();
-        } catch (HibernateException e) {
-            session = sessionFactory.openSession();
-        }
-        return session.createQuery("from User").list();
+        return sessionFactory.getCurrentSession().createQuery("from User").list();
+    }
+
+    public void add(User user) {
+        sessionFactory.getCurrentSession().persist(user);
     }
 }

@@ -1,7 +1,6 @@
 package ru.kuzdikenov.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import jakarta.persistence.EntityManagerFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +10,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -53,26 +51,23 @@ public class PersistenceConfig implements EnvironmentAware {
     }
 
     @Bean
-    public EntityManagerFactory entityManagerFactory(DataSource dataSource, HibernateJpaVendorAdapter jpaVendorAdapter) {
-        LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
-        entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter);
-        entityManagerFactory.setPackagesToScan("ru.kuzdikenov.model");
-        entityManagerFactory.setDataSource(dataSource);
-        entityManagerFactory.afterPropertiesSet();
-        return entityManagerFactory.getObject();
-    }
-
-    @Bean
     @Primary
     public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setPackagesToScan("ru.kuzdikenov.model");
+
         Properties hibernateProperties = new Properties();
+
         hibernateProperties.setProperty("hibernate.dialect", environment.getProperty("hibernate.dialect"));
+
+        // Связываем контекст сессии со Spring-транзакциями
+        hibernateProperties.setProperty("hibernate.current_session_context_class", "org.springframework.orm.hibernate5.SpringSessionContext");
+
         sessionFactory.setHibernateProperties(hibernateProperties);
         return sessionFactory;
     }
+
 
     @Bean
     public PlatformTransactionManager transactionManager(LocalSessionFactoryBean localSessionFactoryBean) {
