@@ -1,6 +1,6 @@
 package ru.kuzdikenov.dto;
 
-public record UserCreateDto(
+public record UserWithUsernameDto(
         String username
 ) {
 

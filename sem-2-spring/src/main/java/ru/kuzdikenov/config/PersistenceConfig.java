@@ -1,6 +1,7 @@
 package ru.kuzdikenov.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import jakarta.persistence.EntityManagerFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,8 +9,11 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -22,6 +26,7 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:persistence.properties")
+@EnableJpaRepositories("ru.kuzdikenov.repository")
 public class PersistenceConfig implements EnvironmentAware {
 
     private Environment environment;
@@ -42,6 +47,16 @@ public class PersistenceConfig implements EnvironmentAware {
     }
 
     @Bean
+    public EntityManagerFactory entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
+        entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter());
+        entityManagerFactory.setPackagesToScan("ru.kuzdikenov.model");
+        entityManagerFactory.setDataSource(dataSource());
+        entityManagerFactory.afterPropertiesSet();
+        return entityManagerFactory.getObject();
+    }
+
+    @Bean
     public HibernateJpaVendorAdapter jpaVendorAdapter() {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setDatabase(Database.valueOf(environment.getProperty("spring.database")));
@@ -52,9 +67,17 @@ public class PersistenceConfig implements EnvironmentAware {
 
     @Bean
     @Primary
-    public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
+    public PlatformTransactionManager transactionManager() {
+        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
+        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory());
+        return jpaTransactionManager;
+    }
+
+    @Bean
+//    @Primary
+    public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource);
+        sessionFactory.setDataSource(dataSource());
         sessionFactory.setPackagesToScan("ru.kuzdikenov.model");
 
         Properties hibernateProperties = new Properties();
@@ -70,8 +93,10 @@ public class PersistenceConfig implements EnvironmentAware {
 
 
     @Bean
-    public PlatformTransactionManager transactionManager(LocalSessionFactoryBean localSessionFactoryBean) {
-        return new HibernateTransactionManager(localSessionFactoryBean.getObject());
+    public PlatformTransactionManager hibernateTransactionManager(LocalSessionFactoryBean localSessionFactoryBean) {
+        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+        transactionManager.setSessionFactory(localSessionFactoryBean.getObject());
+        return transactionManager;
     }
 
     @Bean

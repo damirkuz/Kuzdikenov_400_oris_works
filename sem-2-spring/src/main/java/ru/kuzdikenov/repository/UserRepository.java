@@ -1,25 +1,21 @@
 package ru.kuzdikenov.repository;
 
-import org.hibernate.SessionFactory;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ru.kuzdikenov.model.User;
 
-import java.util.List;
+import java.util.Optional;
 
-@Repository
-public class UserRepository {
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByUsername(String username);
 
-    private final SessionFactory sessionFactory;
+    @Query(value = "select u from User u where u.username = :username")
+    Optional<User> getByUsername(String username);
 
-    public UserRepository(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    @Query(value = "SELECT * FROM users WHERE users.username = ?1", nativeQuery = true)
+    Optional<User> getByUsernameNative(String username);
 
-    public List<User> findAll() {
-        return sessionFactory.getCurrentSession().createQuery("from User").list();
-    }
+    void deleteByUsername(String username);
 
-    public void add(User user) {
-        sessionFactory.getCurrentSession().persist(user);
-    }
+
 }
